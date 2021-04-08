@@ -3,8 +3,8 @@ version: "3.3"
 services:
   db:
     
-    image: mongo:latest
-    # image: andresvidal/rpi3-mongodb3:latest
+    # image: mongo:latest
+    image: andresvidal/rpi3-mongodb3:latest
     container_name: "ampgodb_container"
     volumes:
       - mongovol:/root/data/db
@@ -27,7 +27,7 @@ services:
       - AMPGO_MEDIA_PATH=/root/fsData
       - AMPGO_HARDRIVE_POSTERS_PATH=/root/fsData/Posters2
       - AMPGO_NO_ART_PIC_PATH=./static/images/animals.jpg
-      - AMPGO_THUMB_PATH=/root/fsData/thumb
+      - AMPGO_THUMB_PATH=/root/thumb
       - AMPGO_TEMPLATE_ADDRESS=./static/templates/AMPGO.template
       - AMPGO_SERVER_PORT=9090
       - AMPGO_SERVER_ADDRESS=http://192.168.0.13
@@ -39,7 +39,8 @@ services:
       - 9090:9090
     volumes:
       - ampgovol:/root/fsData/
-      - ampgopicvol:/root/static/
+      - ampgopicvol:/root/thumb
+      # -ampgostaticvol:/root/static/
     depends_on:
       - db
 
@@ -51,7 +52,8 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/charlie/Music
+      device: /media/pi/HD/Music
+      # device: /home/pi/Music
       # device: /media/pi/FOO/Music
       # device: /media/pi/PiTB/media
       o: bind
@@ -61,14 +63,26 @@ volumes:
     driver_opts:
       type: none
       # device: /home/pi/Thumbnails
-      device: /home/charlie/Thumbnails
+      # device: /home/pi/Thumbnails
+      device: /media/pi/HD/Thumbnails
       o: bind
+
+  # ampgostaticvol:
+    # driver: local
+    # driver_opts:
+      # type: none
+      # device: /home/pi/Thumbnails
+      # device: /home/pi/Thumbnails
+      # device: /media/pi/HD/Thumbnails
+      # o: bind
+
 
   mongovol:
     driver: local
     driver_opts:
       type: none
-      device: /home/charlie/data/db
+      # device: /home/pi/data/db
+      device: /media/pi/HD/data/db
       o: bind
 
   # mgojsvol:

@@ -1,5 +1,5 @@
-# FROM arm32v7/golang:1.12.13 AS builder
-FROM golang:latest AS builder
+FROM arm32v7/golang:1.12.13 AS builder
+# FROM golang:latest AS builder
 RUN mkdir /go/src/ampgo
 WORKDIR /go/src/ampgo
 
@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main /go/src/ampg
 
 # FROM arm32v6/alpine:latest
 FROM alpine:latest
-RUN apk --no-cache add ca-certificates
+# RUN apk --no-cache add ca-certificates
 WORKDIR /root/
 
 COPY --from=builder /go/src/ampgo/main .
