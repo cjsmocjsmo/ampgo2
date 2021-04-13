@@ -3,7 +3,12 @@ FROM arm32v7/golang:1.12.13 AS builder
 RUN mkdir /go/src/ampgo
 WORKDIR /go/src/ampgo
 
-COPY ampgo.go .
+COPY ampgoserver.go .
+COPY ampgosetup.go .
+COPY artist.go .
+COPY album.go .
+COPY songs.go .
+COPY mp3.go .
 COPY go.mod .
 COPY go.sum .
 RUN export GOPATH=/go/src/ampgo

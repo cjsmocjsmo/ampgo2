@@ -21,68 +21,186 @@
 package main
 
 import (
-	"encoding/json"
-	ampgolib "github.com/cjsmocjsmo/ampgolibmod"
-	"github.com/gorilla/mux"
+	// "fmt"
 	"log"
+	// "math/rand"
+	"os"
+	// "path"
+	// "strconv"
+	// "strings"
 	"net/http"
+	"encoding/json"
+	"github.com/gorilla/mux"
+	"github.com/globalsign/mgo"
+	"github.com/globalsign/mgo/bson"
+	// ampgosetup "github.com/cjsmocjsmo/ampgosetup"
 )
 
+type plist struct {
+	PLName string              `bson:"PLName"`
+	PLId   string              `bson:"PLId"`
+	Songs  []map[string]string `bson:"Songs"`
+}
+
+type iMgfa struct {
+	Album   string
+	HSImage string
+	Songs   []map[string]string
+}
+
+type rAlbinfo struct {
+	Songs   []map[string]string `bson:"songs"`
+	HSImage string
+}
+
+type voodoo struct {
+	Playlists []map[string]string
+}
+
+func sfdbCon() *mgo.Session {
+	s, err := mgo.Dial(os.Getenv("AMP_AMPDB_ADDR"))
+	if err != nil {
+		log.Println("Session creation dial error")
+		log.Println(err)
+	}
+	log.Println("Session Connection to db established")
+	return s
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-func initialArtistInfo(w http.ResponseWriter, r *http.Request) {
-	AV := ampgolib.GetInitArtistInfo()
+func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
+	ofset := OffSet
+	ses := sfdbCon()
+	defer ses.Close()
+	AMPc := ses.DB("artistview").C("artistviews")
+	b1 := bson.M{"_id": 0}
+	var av []ArtVIEW
+	err := AMPc.Find(nil).Select(b1).Sort("artist").Limit(ofset).All(&av)
+	if err != nil {
+		log.Println("find one has failed")
+		log.Println(err)
+	}
+	log.Println("GArtView is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(AV)
+	json.NewEncoder(w).Encode(&av)
 	log.Println("Initial Artist Info Complete")
-	return
 }
 
 func initialalbumInfoHandler(w http.ResponseWriter, r *http.Request) {
-	GIAI := ampgolib.GetInitAlbumInfo()
+	ofset := OffSet
+	ses := sfdbCon()
+	defer ses.Close()
+	ALBc := ses.DB("albview").C("albview")
+	b1 := bson.M{"_id": 0}
+	var albv []AlbvieW
+	err := ALBc.Find(nil).Select(b1).Sort("album").Limit(ofset).All(&albv)
+	if err != nil {
+		log.Println("initial album info has fucked up")
+		log.Println(err)
+	}
+	log.Println("GInitialAlbumInfo is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(GIAI)
-	return
+	json.NewEncoder(w).Encode(&albv)
 }
 
 func initialsongInfoHandler(w http.ResponseWriter, r *http.Request) {
-	ISI := ampgolib.GetInitSongInfo()
+	ofset := OffSet
+	ses := sfdbCon()
+	defer ses.Close()
+	MAINc := ses.DB("maindb").C("maindb")
+	b1 := bson.M{"_id": 0, "artist": 1, "title": 1, "fileID": 1}
+	var tv []map[string]string
+	// err := MAINc.Find(nil).Select(b1).Sort("title").Limit(ofset).All(&tv)
+	err := MAINc.Find(nil).Select(b1).Limit(ofset).All(&tv)
+	if err != nil {
+		log.Println("intial song info fucked up")
+		log.Println(err)
+	}
+	log.Println("GInitialSongInfo is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(ISI)
-	return
+	json.NewEncoder(w).Encode(&tv)
 }
 
 func artistPageHandler(w http.ResponseWriter, r *http.Request) {
-	ArtA := ampgolib.ArtistAlpha()
+	ses := sfdbCon()
+	defer ses.Close()
+	ARTVc := ses.DB("artistview").C("artistviews")
+	var ARDist []map[string]string
+	err := ARTVc.Find(nil).Distinct("page", &ARDist)
+	if err != nil {
+		log.Println("artist alpha has fucked up")
+		log.Println(err)
+	}
+	log.Println("ArtistAlpha is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(ArtA)
+	json.NewEncoder(w).Encode(&ARDist)
 }
 
 func albumPageHandler(w http.ResponseWriter, r *http.Request) {
-	AlbA := ampgolib.AlbumAlpha()
+	ses := sfdbCon()
+	defer ses.Close()
+	ALBVc := ses.DB("albview").C("albview")
+	var ALDist []AlbvieW
+	err := ALBVc.Find(nil).Distinct("page", &ALDist)
+	if err != nil {
+		log.Println("album alpha fucked up")
+		log.Println(err)
+	}
+	log.Println("AlbumAlpha is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(AlbA)
+	json.NewEncoder(w).Encode(&ALDist)
 }
 
 func titlePageHandler(w http.ResponseWriter, r *http.Request) {
-	TA := ampgolib.TitleAlpha()
+	ses := sfdbCon()
+	defer ses.Close()
+	MAINc := ses.DB("maindb").C("maindb")
+	var TDist []map[string]string
+	err := MAINc.Find(nil).Distinct("page", &TDist)
+	if err != nil {
+		log.Println("title alpha fucked up")
+		log.Println(err)
+	}
+	log.Println("TitleAlpha is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(TA)
+	json.NewEncoder(w).Encode(&TDist)
 }
 
 func imageSongsForAlbumHandler(w http.ResponseWriter, r *http.Request) {
-	qu := r.URL.Query().Get("selected")
-	foo := ampgolib.GImageSongForAlbum(qu)
+	albid := r.URL.Query().Get("selected")
+	ses := sfdbCon()
+	defer ses.Close()
+	ALBc := ses.DB("albview").C("albview")
+	b1 := bson.M{"albumID": albid}
+	b2 := bson.M{"_id": 0, "album": 1, "songs": 1, "hsimage": 1}
+	var iM []iMgfa
+	err := ALBc.Find(b1).Select(b2).One(&iM)
+	if err != nil {
+		log.Println("gimage song for album fucked up")
+		log.Println(err)
+	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(foo)
-	return
+	json.NewEncoder(w).Encode(&iM)
 }
 
 func statsHandler(w http.ResponseWriter, r *http.Request) {
-	ST := ampgolib.GStats()
+	// ST := ampgolib.GStats()
+	ses := sfdbCon()
+	defer ses.Close()
+	STATc := ses.DB("goampgo").C("dbstats")
+	b1 := bson.M{"_id": 0}
+	var st map[string]string
+	err := STATc.Find(nil).Select(b1).One(&st)
+	if err != nil {
+		log.Println("stats has fucked up")
+		log.Println(err)
+	}
+	log.Println("GStats is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(ST)
+	json.NewEncoder(w).Encode(&st)
 }
 
 // func randomPicsHandler(w http.ResponseWriter, r *http.Request) {
@@ -106,24 +224,57 @@ func statsHandler(w http.ResponseWriter, r *http.Request) {
 // }
 
 func songInfoHandler(w http.ResponseWriter, r *http.Request) {
-	qu := r.URL.Query().Get("selected")
-	si := ampgolib.SongInfo(qu)
+	pagenum := r.URL.Query().Get("selected")
+	ses := sfdbCon()
+	defer ses.Close()
+	MAINc := ses.DB("maindb").C("maindb")
+	b1 := bson.M{"page": pagenum}
+	b2 := bson.M{"_id": 0, "title": 1, "fileID": 1, "artist": 1}
+	var SIS []map[string]string
+	err := MAINc.Find(b1).Select(b2).All(&SIS)
+	if err != nil {
+		log.Println("song info has fucked up")
+		log.Println(err)
+	}
+	log.Println("SongInfo is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(si)
+	json.NewEncoder(w).Encode(&SIS)
 }
 
 func albumInfoHandler(w http.ResponseWriter, r *http.Request) {
-	qu := r.URL.Query().Get("selected")
-	ai := ampgolib.AlbumInfo(qu)
+	pagenum := r.URL.Query().Get("selected")
+	ses := sfdbCon()
+	defer ses.Close()
+	ALBVc := ses.DB("albview").C("albview")
+	b1 := bson.M{"page": pagenum}
+	b2 := bson.M{"_id": 0, "artist": 1, "artistID": 1, "album": 1, "albumID": 1, "hsimage": 1, "songs": 1, "numsongs": 1}
+	var AI []AlbvieW
+	err := ALBVc.Find(b1).Select(b2).All(&AI)
+	if err != nil {
+		log.Println("AlbumInfo has fucked up")
+		log.Println(err)
+	}
+	log.Println("AlbumInfo is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(ai)
+	json.NewEncoder(w).Encode(&AI)
 }
 
 func artistInfoHandler(w http.ResponseWriter, r *http.Request) {
-	qu := r.URL.Query().Get("selected")
-	arti := ampgolib.ArtistInfo(qu)
+	pagenum := r.URL.Query().Get("selected")
+	ses := sfdbCon()
+	defer ses.Close()
+	ARTc := ses.DB("artistview").C("artistviews")
+	b1 := bson.M{"page": pagenum}
+	b2 := bson.M{"_id": 0, "artist": 1, "artistID": 1, "albums": 1, "page": 1}
+	var ARTI []ArtVIEW
+	err := ARTc.Find(b1).Select(b2).All(&ARTI)
+	if err != nil {
+		log.Println("ArtistInfo has fucked up")
+		log.Println(err)
+	}
+	log.Println("ArtistInfo is complete")
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(arti)
+	json.NewEncoder(w).Encode(&ARTI)
 }
 
 // func songSearchHandler(w http.ResponseWriter, r *http.Request) {
@@ -222,12 +373,12 @@ func artistInfoHandler(w http.ResponseWriter, r *http.Request) {
 // }
 
 func init() {
-	ampgolib.SetUpCheck()
+	SetUpCheck()
 }
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/InitialArtistInfo", initialArtistInfo)
+	r.HandleFunc("/InitialArtistInfo", initialArtistInfoHandler)
 	r.HandleFunc("/InitialAlbumInfo", initialalbumInfoHandler)
 	r.HandleFunc("/InitialSongInfo", initialsongInfoHandler)
 
@@ -258,6 +409,6 @@ func main() {
 	// r.HandleFunc("/DeleteSongFromPlaylist", deleteSongFromPlaylistHandler)
 	// r.HandleFunc("/SetUp", setUpHandler)
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("static/"))))
-	http.ListenAndServe(":8080", (r))
+	http.ListenAndServe(":9090", (r))
 	// 		csrf.Protect([]byte(key), csrf.Secure(false))(r))
 }
