@@ -95,23 +95,23 @@ func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func initialalbumInfoHandler(w http.ResponseWriter, r *http.Request) {
-	// ofset := OffSet
-	// ses := sfdbCon()
-	// defer ses.Close()
-	// ALBc := ses.DB("albview").C("albview")
-	// b1 := bson.M{"_id": 0}
-	// var albv []AlbvieW
-	// err := ALBc.Find(nil).Select(b1).Sort("album").Limit(ofset).All(&albv)
-	// if err != nil {
-	// 	log.Println("initial album info has fucked up")
-	// 	log.Println(err)
-	// }
-	// log.Println("GInitialAlbumInfo is complete")
-	// w.Header().Set("Content-Type", "application/json")
-	// json.NewEncoder(w).Encode(&albv)
-	var p = map[string]string{"Title" : "FuckMeArtists"}
+	ofset := OffSet
+	ses := sfdbCon()
+	defer ses.Close()
+	ALBc := ses.DB("albview").C("albview")
+	b1 := bson.M{"_id": 0}
+	var albv []AlbvieW
+	err := ALBc.Find(nil).Select(b1).Sort("album").Limit(ofset).All(&albv)
+	if err != nil {
+		log.Println("initial album info has fucked up")
+		log.Println(err)
+	}
+	log.Println("GInitialAlbumInfo is complete")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(&albv)
+	// var p = map[string]string{"Title" : "FuckMeArtists"}
 	t := template.Must(template.ParseFiles("./static/templates/album.html"))
-    t.Execute(w, p)
+    t.Execute(w, &albv)
 	log.Println("Initial Artist Info Complete")
 }
 
@@ -131,8 +131,8 @@ func initialsongInfoHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("GInitialSongInfo is complete")
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&tv)
-	var p = map[string]string{"Title" : "FuckMeArtists"}
-	t := template.Must(template.ParseFiles("./static/templates/album.html"))
+	// var p = map[string]string{"Title" : "FuckMeArtists"}
+	t := template.Must(template.ParseFiles("./static/templates/song.html"))
     t.Execute(w, &tv)
 	log.Println("Initial Artist Info Complete")
 }
@@ -386,7 +386,7 @@ func artistInfoHandler(w http.ResponseWriter, r *http.Request) {
 // }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
-	var p = map[string]string{"Title" : "FUCKME"}
+	var p = map[string]string{"Title" : "AmpGo"}
     t := template.Must(template.ParseFiles("./static/templates/home.html"))
     t.Execute(w, p)
 }
@@ -428,6 +428,7 @@ func main() {
 	// r.HandleFunc("/DeletePlaylistFromDB", deletePlaylistFromDBHandler)
 	// r.HandleFunc("/DeleteSongFromPlaylist", deleteSongFromPlaylistHandler)
 	// r.HandleFunc("/SetUp", setUpHandler)
+	
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("static/"))))
 	http.ListenAndServe(":9090", (r))
 	// 		csrf.Protect([]byte(key), csrf.Secure(false))(r))

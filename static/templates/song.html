@@ -13,20 +13,37 @@
         <div class="container">
             <header class="d-flex justify-content-center py-3">
                 <ul class="nav nav-pills">
-                    <li class="nav-item"><a href="#" class="nav-link active">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Artists</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Albums</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link">Songs</a></li>
+                    <li class="nav-item"><a href="/Home" class="nav-link active">Home</a></li>
+                    <li class="nav-item"><a href="/InitialArtistInfo#" class="nav-link active">Artists</a></li>
+                    <li class="nav-item"><a href="/InitialAlbumInfo" class="nav-link">Albums</a></li>
+                    <li class="nav-item"><a href="/InitialSongInfo" class="nav-link">Songs</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Playlists</a></li>
                 </ul>
             </header>
         </div>
 		<h1>Songs</h1>
-		<H1>{{.}}</H1>
+		<ul>
+			{{range . }}
+				<li>{{.artist}}</li>
+				<li>{{.fileID}}</li>
+				<li>{{.title}}</li>
+			{{end}}
+		</ul>
+		{{.}}
     </body>
 </html>
 
-
+<!-- type AlbvieW struct {
+	Artist   string              `bson:"artist"`
+	ArtistID string              `bson:"artistID"`
+	Album    string              `bson:"album"`
+	AlbumID  string              `bson:"albumID"`
+	Songs    []map[string]string `bson:"songs"`
+	Page     string              `bson:"page"`
+	NumSongs string              `bson:"numsongs"`
+	PicPath  string              `bson:"picPath"`
+	Idx      string              `bson:"idx"`
+} -->
 
 
 

@@ -25,10 +25,9 @@ services:
       - AMPGO_NUM_RAND_PICS=10
       - AMPGO_MONGODB_THUMB_ADDRESS=mongodb://db:27017/ampgothumb
       - AMPGO_MEDIA_PATH=/root/fsData
-      - AMPGO_HARDRIVE_POSTERS_PATH=/root/fsData/Posters2
       - AMPGO_NO_ART_PIC_PATH=./static/images/animals.jpg
-      - AMPGO_THUMB_PATH=/root/thumb
-      - AMPGO_TEMPLATE_ADDRESS=./static/templates/AMPGO.template
+      - AMPGO_THUMB_PATH=/root/static
+      - AMPGO_TEMPLATE_ADDRESS=./static/templates/
       - AMPGO_SERVER_PORT=9090
       - AMPGO_SERVER_ADDRESS=http://192.168.0.93
       # - MONGO_INITDB_ROOT_USERNAME=root
@@ -39,7 +38,7 @@ services:
       - 9090:9090
     volumes:
       - ampgovol:/root/fsData/
-      - ampgopicvol:/root/thumb
+      - ampgopicvol:/root/static
       # -ampgostaticvol:/root/static/
     depends_on:
       - db
