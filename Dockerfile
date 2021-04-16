@@ -35,7 +35,7 @@ COPY static/css/loginstyles.css ./static/css/
 
 COPY static/templates/home.html ./static/templates/
 COPY static/templates/intro.html ./static/templates/
-COPY static/templates/artist.html ./static/templates/
+COPY static/templates/artist.template ./static/templates/
 COPY static/templates/album.html ./static/templates/
 COPY static/templates/song.html ./static/templates/
 COPY static/templates/playlist.html ./static/templates/

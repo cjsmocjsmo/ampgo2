@@ -21,14 +21,24 @@
                 </ul>
             </header>
         </div>
+		{{ range . }}
+		<ul>
+			<li>{{ .artist }}</li>
+			<li>Fuckme</li>
+		</ul>
+		{{end}}
     </body>
-	<!-- {{ . }} -->
-	{{range . }}
-		<p>{{ . }}</p>
-		<p>Fuckme</p>
-	{{end}}
-</html>
 
+	
+</html>
+<!-- //ArtVIEW exported
+type ArtVIEW struct {
+	Artist   string              `bson:"artist"`
+	ArtistID string              `bson:"artistID"`
+	Albums   []map[string]string `bson:"albums"`
+	Page     int                 `bson:"page"`
+	Idx      int                 `bson:"idx"`
+} -->
 
 <!-- Start Artists page 
  <div class='amp' data-role="page" id="artists" data-theme="b">

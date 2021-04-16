@@ -72,14 +72,22 @@ func sfdbCon() *mgo.Session {
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
+// //ArtVIEW exported
+// type ArtVIEW struct {
+// 	Artist   string              `bson:"artist"`
+// 	ArtistID string              `bson:"artistID"`
+// 	Albums   []map[string]string `bson:"albums"`
+// 	Page     int                 `bson:"page"`
+// 	Idx      int                 `bson:"idx"`
+// }
 func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
 	ofset := OffSet
 	ses := sfdbCon()
 	defer ses.Close()
 	AMPc := ses.DB("artistview").C("artistviews")
-	b1 := bson.M{"_id": 0}
-	var av []ArtVIEW
+	b1 := bson.M{"_id": 0, "albums":0}
+	// var av []ArtVIEW
+	var av []map[string]string
 	err := AMPc.Find(nil).Select(b1).Sort("artist").Limit(ofset).All(&av)
 	if err != nil {
 		log.Println("find one has failed")
@@ -93,18 +101,29 @@ func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&av)
 	// var p = map[string]string{"Title" : "FuckMeArtists"}
-	t := template.Must(template.ParseFiles("./static/templates/artist.html"))
+	t := template.Must(template.ParseFiles("./static/templates/artist.template"))
     t.Execute(w, av)
 	log.Println("Initial Artist Info Complete")
 }
-
+// type AlbvieW struct {
+// 	Artist   string              `bson:"artist"`
+// 	ArtistID string              `bson:"artistID"`
+// 	Album    string              `bson:"album"`
+// 	AlbumID  string              `bson:"albumID"`
+// 	Songs    []map[string]string `bson:"songs"`
+// 	Page     string              `bson:"page"`
+// 	NumSongs string              `bson:"numsongs"`
+// 	PicPath  string              `bson:"picPath"`
+// 	Idx      string              `bson:"idx"`
+// }
 func initialalbumInfoHandler(w http.ResponseWriter, r *http.Request) {
 	ofset := OffSet
 	ses := sfdbCon()
 	defer ses.Close()
 	ALBc := ses.DB("albview").C("albview")
-	b1 := bson.M{"_id": 0}
-	var albv []AlbvieW
+	b1 := bson.M{"_id": 0, "songs": 0}
+	// var albv []AlbvieW
+	var albv []map[string]string
 	err := ALBc.Find(nil).Select(b1).Sort("album").Limit(ofset).All(&albv)
 	if err != nil {
 		log.Println("initial album info has fucked up")
@@ -133,6 +152,7 @@ func initialsongInfoHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println("intial song info fucked up")
 		log.Println(err)
 	}
+	log.Println(&tv)
 	log.Println("GInitialSongInfo is complete")
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&tv)
