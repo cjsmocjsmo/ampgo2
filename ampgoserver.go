@@ -101,7 +101,7 @@ func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&av)
 	// var p = map[string]string{"Title" : "FuckMeArtists"}
-	t := template.Must(template.ParseFiles("./static/templates/artist.template"))
+	t := template.Must(template.ParseFiles("./static/templates/artist.html"))
     t.Execute(w, av)
 	log.Println("Initial Artist Info Complete")
 }
