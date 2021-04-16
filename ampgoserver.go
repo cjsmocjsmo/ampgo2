@@ -74,23 +74,27 @@ func sfdbCon() *mgo.Session {
 ///////////////////////////////////////////////////////////////////////////////
 
 func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
-	// ofset := OffSet
-	// ses := sfdbCon()
-	// defer ses.Close()
-	// AMPc := ses.DB("artistview").C("artistviews")
-	// b1 := bson.M{"_id": 0}
-	// var av []ArtVIEW
-	// err := AMPc.Find(nil).Select(b1).Sort("artist").Limit(ofset).All(&av)
-	// if err != nil {
-	// 	log.Println("find one has failed")
-	// 	log.Println(err)
-	// }
-	// log.Println("GArtView is complete")
+	ofset := OffSet
+	ses := sfdbCon()
+	defer ses.Close()
+	AMPc := ses.DB("artistview").C("artistviews")
+	b1 := bson.M{"_id": 0}
+	var av []ArtVIEW
+	err := AMPc.Find(nil).Select(b1).Sort("artist").Limit(ofset).All(&av)
+	if err != nil {
+		log.Println("find one has failed")
+		log.Println(err)
+	}
+	log.Println(&av)
+	log.Println("GArtView is complete")
+	log.Println(av[0])
+	
+
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&av)
-	var p = map[string]string{"Title" : "FuckMeArtists"}
+	// var p = map[string]string{"Title" : "FuckMeArtists"}
 	t := template.Must(template.ParseFiles("./static/templates/artist.html"))
-    t.Execute(w, p)
+    t.Execute(w, av)
 	log.Println("Initial Artist Info Complete")
 }
 
@@ -107,8 +111,9 @@ func initialalbumInfoHandler(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 	log.Println("GInitialAlbumInfo is complete")
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(&albv)
+	log.Println(&albv)
+	// w.Header().Set("Content-Type", "application/json")
+	// json.NewEncoder(w).Encode(&albv)
 	// var p = map[string]string{"Title" : "FuckMeArtists"}
 	t := template.Must(template.ParseFiles("./static/templates/album.html"))
     t.Execute(w, &albv)

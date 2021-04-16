@@ -21,8 +21,12 @@
                 </ul>
             </header>
         </div>
-		<H1>{{.Title}}</H1>
     </body>
+	<!-- {{ . }} -->
+	{{range . }}
+		<p>{{ . }}</p>
+		<p>Fuckme</p>
+	{{end}}
 </html>
 
 

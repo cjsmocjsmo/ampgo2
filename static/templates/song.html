@@ -22,13 +22,13 @@
             </header>
         </div>
 		<h1>Songs</h1>
-		<ul>
-			{{range . }}
+		{{range . }}
+			<ul>
 				<li>{{.artist}}</li>
 				<li>{{.fileID}}</li>
 				<li>{{.title}}</li>
-			{{end}}
-		</ul>
+			</ul>
+		{{end}}
 		{{.}}
     </body>
 </html>

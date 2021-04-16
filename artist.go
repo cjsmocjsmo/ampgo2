@@ -110,12 +110,13 @@ type ArtVIEW struct {
 //InsArtIPipe2 exported
 func InsArtIPipe2(AI2 map[string]string, aAID []map[string]string, idxx int) {
 	page, _ := strconv.Atoi(AI2["page"])
-	var AV1 ArtVIEW
-	AV1.Artist = AI2["artist"]
-	AV1.ArtistID = AI2["artistID"]
-	AV1.Albums = aAID
-	AV1.Page = page
-	AV1.Idx = idxx
+	var AV1 ArtVIEW = ArtVIEW {
+		Artist : AI2["artist"],
+		ArtistID : AI2["artistID"],
+		Albums : aAID,
+		Page : page,
+		Idx : idxx,
+	}
 	sesC := DBcon()
 	defer sesC.Close()
 	ARTV3c := sesC.DB("artistview").C("artistviews")
