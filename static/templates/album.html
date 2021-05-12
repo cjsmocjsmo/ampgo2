@@ -45,7 +45,9 @@
     
   </head>
   <body>
-    
+{{range .}}
+  {{.}}
+{{end}} 
 <header>
   <div class="collapse bg-dark" id="navbarHeader">
     <div class="container">
@@ -271,9 +273,7 @@
 
       
   </body>
-{{range .}}
-  {{.}}
-{{end}}
+
 </html>
 
 <!-- Start Albums Page 
