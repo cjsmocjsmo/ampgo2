@@ -102,7 +102,7 @@ func initialArtistInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// json.NewEncoder(w).Encode(&av)
 	// var p = map[string]string{"Title" : "FuckMeArtists"}
 	// t := template.Must(template.ParseFiles("./static/templates/artist.html"))
-	t, _ := template.ParseFiles("./static/templates/artist.html")
+	t, _ := template.ParseFiles("assets/templates/artist.html")
     t.Execute(w, &av)
 	log.Println("Initial Artist Info Complete")
 }
@@ -135,7 +135,7 @@ func initialalbumInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&albv)
 	// var p = map[string]string{"Title" : "FuckMeArtists"}
-	t := template.Must(template.ParseFiles("./static/templates/album.html"))
+	t := template.Must(template.ParseFiles("assets/templates/album.html"))
     t.Execute(w, &albv)
 	log.Println("Initial Artist Info Complete")
 }
@@ -158,7 +158,7 @@ func initialsongInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// w.Header().Set("Content-Type", "application/json")
 	// json.NewEncoder(w).Encode(&tv)
 	// var p = map[string]string{"Title" : "FuckMeArtists"}
-	t := template.Must(template.ParseFiles("./static/templates/song.html"))
+	t := template.Must(template.ParseFiles("assets/templates/song.html"))
     t.Execute(w, &tv)
 	log.Println("Initial Artist Info Complete")
 }
