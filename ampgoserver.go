@@ -413,7 +413,7 @@ func artistInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	var p = map[string]string{"Title" : "AmpGo"}
-    t := template.Must(template.ParseFiles("./static/templates/home.html"))
+    t := template.Must(template.ParseFiles("assets/templates/home.html"))
     t.Execute(w, p)
 }
 
