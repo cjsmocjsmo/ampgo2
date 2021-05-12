@@ -411,6 +411,13 @@ func artistInfoHandler(w http.ResponseWriter, r *http.Request) {
 // 	json.NewEncoder(w).Encode("Setup Complete")
 // }
 
+func introHandler(w http.ResponseWriter, r *http.Request) {
+	var p = map[string]string{"Title" : "AmpGo"}
+    t := template.Must(template.ParseFiles("assets/templates/intro.html"))
+    t.Execute(w, p)
+}
+
+
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	var p = map[string]string{"Title" : "AmpGo"}
     t := template.Must(template.ParseFiles("assets/templates/home.html"))
@@ -424,7 +431,9 @@ func init() {
 func main() {
 	r := mux.NewRouter()
 	s := r.PathPrefix("/assets").Subrouter()
+	r.HandleFunc("/Intro", introHandler)
 	r.HandleFunc("/Home", homeHandler)
+
 	r.HandleFunc("/InitialArtistInfo", initialArtistInfoHandler)
 	r.HandleFunc("/InitialAlbumInfo", initialalbumInfoHandler)
 	r.HandleFunc("/InitialSongInfo", initialsongInfoHandler)
