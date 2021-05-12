@@ -25,20 +25,22 @@ RUN \
   mkdir ./data && \
   mkdir ./data/db && \
   mkdir ./static && \
-  mkdir ./static/css && \
-  mkdir ./static/templates && \
-  chmod -R +rwx ./static
+  mkdir ./assets && \
+  mkdir ./assets/css && \
+  mkdir ./assets/templates && \
+  chmod -R +rwx ./static && \
+  chmod -R +rwx ./assets
 
-COPY static/animals.jpg ./static/
+COPY assets/animals.jpg ./assets/
 
-COPY static/css/loginstyles.css ./static/css/
+COPY assets/css/loginstyles.css ./assets/css/
 
-COPY static/templates/home.html ./static/templates/
-COPY static/templates/intro.html ./static/templates/
-COPY static/templates/artist.html ./static/templates/
-COPY static/templates/album.html ./static/templates/
-COPY static/templates/song.html ./static/templates/
-COPY static/templates/playlist.html ./static/templates/
+COPY assets/templates/home.html ./assets/templates/
+COPY assets/templates/intro.html ./assets/templates/
+COPY assets/templates/artist.html ./assets/templates/
+COPY assets/templates/album.html ./assets/templates/
+COPY assets/templates/song.html ./assets/templates/
+COPY assets/templates/playlist.html ./assets/templates/
 
 RUN \
   mkdir ./fsData && \

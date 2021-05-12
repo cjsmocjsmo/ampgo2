@@ -423,6 +423,7 @@ func init() {
 
 func main() {
 	r := mux.NewRouter()
+	s := r.PathPrefix("/assets").Subrouter()
 	r.HandleFunc("/Home", homeHandler)
 	r.HandleFunc("/InitialArtistInfo", initialArtistInfoHandler)
 	r.HandleFunc("/InitialAlbumInfo", initialalbumInfoHandler)
@@ -456,6 +457,7 @@ func main() {
 	// r.HandleFunc("/SetUp", setUpHandler)
 	
 	r.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("static/"))))
+	s.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("assets/"))))
 	http.ListenAndServe(":9090", (r))
 	// 		csrf.Protect([]byte(key), csrf.Secure(false))(r))
 }
