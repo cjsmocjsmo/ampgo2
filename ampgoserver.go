@@ -400,11 +400,11 @@ func artistInfoHandler(w http.ResponseWriter, r *http.Request) {
 // 	json.NewEncoder(w).Encode(dsfp)
 // }
 
-// func setUpHandler(w http.ResponseWriter, r *http.Request) {
-// 	ampgolib.SetUp()
-// 	w.Header().Set("Content-Type", "application/json")
-// 	json.NewEncoder(w).Encode("Setup Complete")
-// }
+func setUpHandler(w http.ResponseWriter, r *http.Request) {
+	SetUp()
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("Setup Complete")
+}
 
 // func setUpHandler(w http.ResponseWriter, r *http.Request) {
 // 	ampgolib.SetUp()
