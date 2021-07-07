@@ -53,7 +53,7 @@ volumes:
       type: none
       # device: /media/pi/1EBA-071A/ssd3/
       # device: /media/pi/HD/Music
-      device: /home/pipi/Music
+      device: /media/pipi/FOO/music
       # device: /media/pi/FOO/Music
       # device: /media/pi/PiTB/media
       o: bind
